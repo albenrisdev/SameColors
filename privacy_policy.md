@@ -4,7 +4,7 @@
 
 ## Overview
 
-Same Colors is a color-matching puzzle game for iOS. This policy explains what data the app collects and how it is used.
+Same Colors is a color-matching puzzle game for Android and iOS. This policy explains what data the app collects and how it is used.
 
 ---
 
@@ -12,7 +12,9 @@ Same Colors is a color-matching puzzle game for iOS. This policy explains what d
 
 Same Colors displays interstitial ads provided by **Google AdMob**. To support ad delivery, the app may collect and share certain data with Google as described below.
 
-Before any tracking occurs, the app requests your permission through Apple's **App Tracking Transparency (ATT)** prompt. You can decline tracking, and the app will still function normally with non-personalized ads.
+On **iOS**, the app requests your permission through Apple's **App Tracking Transparency (ATT)** prompt before any tracking occurs. You can decline tracking, and the app will still function normally with non-personalized ads.
+
+On **Android**, ad personalization follows your device's ad settings. You can opt out of personalized ads in **Settings > Google > Ads**.
 
 ---
 
@@ -20,18 +22,18 @@ Before any tracking occurs, the app requests your permission through Apple's **A
 
 | Data | Linked to You | Used for Tracking | Purpose |
 |------|---------------|-------------------|---------|
-| Device Identifier (IDFA) | No | Yes (with consent) | Third-party advertising |
+| Device Identifier (IDFA on iOS, Ad ID on Android) | No | Yes (with consent) | Third-party advertising |
 | Product Interaction | No | No | Advertising and analytics |
 | Crash Data | No | No | App stability |
 | Performance Data | No | No | App performance |
 
-If you decline the ATT prompt, the Device Identifier is not collected or shared.
+On iOS, if you decline the ATT prompt, the Device Identifier is not collected or shared. On Android, you can reset or opt out of your advertising ID in device settings.
 
 ---
 
 ## Data Stored Locally on Your Device
 
-The app saves a small amount of game data to your device using `UserDefaults`. This data never leaves your device and includes:
+The app saves a small amount of game data to your device using `UserDefaults` (iOS) or `SharedPreferences` (Android). This data never leaves your device and includes:
 
 | Data | Purpose |
 |------|---------|
@@ -74,8 +76,9 @@ Same Colors does not knowingly collect personal information from children under 
 
 ## Your Choices
 
-- **Decline tracking:** When the ATT prompt appears, tap "Ask App Not to Track" to prevent personalized ad tracking.
-- **Change tracking later:** Go to **Settings > Privacy & Security > Tracking** on your device to modify your preference at any time.
+- **iOS — Decline tracking:** When the ATT prompt appears, tap "Ask App Not to Track" to prevent personalized ad tracking.
+- **iOS — Change tracking later:** Go to **Settings > Privacy & Security > Tracking** on your device to modify your preference at any time.
+- **Android — Opt out of personalized ads:** Go to **Settings > Google > Ads** to manage your ad preferences or reset your advertising ID.
 
 ---
 
