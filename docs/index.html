@@ -1,9 +1,645 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><title>Same Colors</title></head>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Same Colors - Swipe, Match & Merge Puzzle Game</title>
+    <meta name="description" content="Same Colors is a vibrant puzzle game where you swipe to slide colored tiles and merge matching ones before your moves run out. Available on iOS and Android.">
+    <meta property="og:title" content="Same Colors - Swipe, Match & Merge Puzzle Game">
+    <meta property="og:description" content="Slide tiles, collide same-colored pairs, and rack up your score. Easy to learn, hard to master.">
+    <meta property="og:image" content="images/feature.png">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="images/icon.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-card: #141833;
+            --cyan: #3dffc8;
+            --pink: #ff5c8a;
+            --yellow: #ffe156;
+            --purple: #b388ff;
+            --blue: #56c8ff;
+            --orange: #ffaa56;
+            --text: #e8eaf6;
+            --text-muted: #9fa8da;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated star background */
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .stars span {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.8; }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: radial-gradient(ellipse at 50% 30%, rgba(61,255,200,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 70%, rgba(255,92,138,0.06) 0%, transparent 50%);
+        }
+
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 28px;
+            box-shadow: 0 0 60px rgba(61,255,200,0.3), 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero h1 .same { color: var(--cyan); }
+        .hero h1 .colors { color: var(--pink); }
+
+        .hero .tagline {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: var(--text-muted);
+            max-width: 500px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero .tagline strong {
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        .store-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .store-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.85rem 1.8rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .store-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .store-btn.ios {
+            background: linear-gradient(135deg, var(--cyan), #1ec8a0);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 20px rgba(61,255,200,0.3);
+        }
+
+        .store-btn.ios:hover {
+            box-shadow: 0 8px 30px rgba(61,255,200,0.5);
+        }
+
+        .store-btn.android {
+            background: linear-gradient(135deg, var(--yellow), var(--orange));
+            color: var(--bg-dark);
+            box-shadow: 0 4px 20px rgba(255,225,86,0.3);
+        }
+
+        .store-btn.android:hover {
+            box-shadow: 0 8px 30px rgba(255,225,86,0.5);
+        }
+
+        .store-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .scroll-hint {
+            margin-top: 3rem;
+            animation: bounce 2s ease-in-out infinite;
+            color: var(--text-muted);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(8px); opacity: 1; }
+        }
+
+        /* Section styling */
+        section {
+            padding: 5rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Screenshots carousel */
+        .screenshots {
+            background: radial-gradient(ellipse at 50% 50%, rgba(179,136,255,0.06) 0%, transparent 60%);
+        }
+
+        .screenshot-scroll {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 1rem 0 2rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .screenshot-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .screenshot-scroll img {
+            flex: 0 0 auto;
+            width: 260px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            scroll-snap-align: center;
+            transition: transform 0.3s;
+        }
+
+        .screenshot-scroll img:hover {
+            transform: scale(1.03);
+        }
+
+        /* How to play */
+        .how-to-play {
+            background: radial-gradient(ellipse at 30% 50%, rgba(61,255,200,0.05) 0%, transparent 50%);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .step:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--cyan);
+        }
+
+        .step p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Features */
+        .features {
+            background: radial-gradient(ellipse at 70% 40%, rgba(255,92,138,0.05) 0%, transparent 50%);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.8rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .feature-dot {
+            flex-shrink: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 0.45rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Difficulty */
+        .difficulty {
+            background: radial-gradient(ellipse at 50% 60%, rgba(255,225,86,0.05) 0%, transparent 50%);
+        }
+
+        .diff-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .diff-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .diff-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .diff-card .diff-label {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.2rem;
+        }
+
+        .diff-card.easy .diff-label {
+            background: rgba(61,255,200,0.15);
+            color: var(--cyan);
+        }
+
+        .diff-card.medium .diff-label {
+            background: rgba(255,225,86,0.15);
+            color: var(--yellow);
+        }
+
+        .diff-card.hard .diff-label {
+            background: rgba(255,92,138,0.15);
+            color: var(--pink);
+        }
+
+        .diff-card .stat {
+            margin-bottom: 0.8rem;
+        }
+
+        .diff-card .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .diff-card .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .diff-card.easy .stat-value { color: var(--cyan); }
+        .diff-card.medium .stat-value { color: var(--yellow); }
+        .diff-card.hard .stat-value { color: var(--pink); }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 6rem 1.5rem;
+            background: radial-gradient(ellipse at 50% 50%, rgba(61,255,200,0.08) 0%, transparent 50%);
+        }
+
+        .cta h2 {
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .screenshot-scroll img {
+                width: 200px;
+            }
+
+            .store-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .store-btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            section {
+                padding: 3.5rem 1.2rem;
+            }
+        }
+    </style>
+</head>
 <body>
-<h1>Same Colors</h1>
-<p>A fun color-matching game for iOS.</p>
-<p><a href="https://apps.apple.com/us/app/same-colors/id6761005376">Download on the App Store</a></p>
+    <!-- Animated stars -->
+    <div class="stars" id="stars"></div>
+
+    <div class="content">
+        <!-- Hero -->
+        <header class="hero">
+            <img src="images/icon.png" alt="Same Colors icon" class="hero-icon">
+            <h1><span class="same">Same</span><span class="colors">Colors</span></h1>
+            <p class="tagline">Swipe to slide. Match to merge. <strong>Chase the high score.</strong></p>
+            <div class="store-buttons">
+                <a href="https://apps.apple.com/us/app/same-colors/id6761005376" class="store-btn ios">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    App Store
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.albenrisdev.samecolors" class="store-btn android">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.67a1.58 1.58 0 0 1-.6-1.3V1.63c0-.54.22-1 .6-1.3l11.06 11.67L3.18 23.67zm14.53-8.2L5.07 22.3l9.64-10.17 3 3.17v.17zm1.27-.67L16.25 12l2.73-2.8 3.13 1.77a1.16 1.16 0 0 1 0 2.06l-3.13 1.77zM5.07 1.7l12.64 6.83-3 3.17L5.07 1.7z"/></svg>
+                    Google Play
+                </a>
+            </div>
+            <div class="scroll-hint">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+            </div>
+        </header>
+
+        <!-- Screenshots -->
+        <section class="screenshots">
+            <h2 class="section-title">See It in Action</h2>
+            <p class="section-subtitle">A neon-lit puzzle experience with smooth animations, particle effects, and satisfying merges.</p>
+            <div class="screenshot-scroll">
+                <img src="images/screenshot-android-2.png" alt="Same Colors gameplay - Easy difficulty" loading="lazy">
+                <img src="images/screenshot-android-1.png" alt="Same Colors gameplay - Medium difficulty" loading="lazy">
+                <img src="images/screenshot-android-3.png" alt="Same Colors gameplay - Hard difficulty" loading="lazy">
+                <img src="images/screenshot-ios-1.png" alt="Same Colors on iPhone - merge in progress" loading="lazy">
+                <img src="images/screenshot-ios-2.png" alt="Same Colors on iPhone - Delicious combo" loading="lazy">
+            </div>
+        </section>
+
+        <!-- How to Play -->
+        <section class="how-to-play">
+            <h2 class="section-title">How to Play</h2>
+            <p class="section-subtitle">Simple rules, endless strategy.</p>
+            <div class="steps">
+                <div class="step">
+                    <span class="step-icon">&#8596;&#65039;</span>
+                    <h3>Swipe</h3>
+                    <p>Swipe in any direction to slide all tiles across the 4x4 grid.</p>
+                </div>
+                <div class="step">
+                    <span class="step-icon">&#127912;</span>
+                    <h3>Match</h3>
+                    <p>When same-colored tiles collide, they merge into one and your move counter resets.</p>
+                </div>
+                <div class="step">
+                    <span class="step-icon">&#9889;</span>
+                    <h3>Score</h3>
+                    <p>The more moves you have left when you merge, the higher your score reward.</p>
+                </div>
+                <div class="step">
+                    <span class="step-icon">&#127942;</span>
+                    <h3>Survive</h3>
+                    <p>Run out of moves or fill the board with no merges possible and it's game over.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <h2 class="section-title">Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-dot" style="background: var(--cyan);"></div>
+                    <div>
+                        <h3>Smooth Swipe Controls</h3>
+                        <p>Intuitive gesture-based gameplay that feels natural on any device.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-dot" style="background: var(--pink);"></div>
+                    <div>
+                        <h3>Animated Tile Merges</h3>
+                        <p>Satisfying animations and particle effects with every merge and combo.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-dot" style="background: var(--yellow);"></div>
+                    <div>
+                        <h3>Synthesized Audio</h3>
+                        <p>Background music and sound effects generated in real-time. Toggle on or off.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-dot" style="background: var(--purple);"></div>
+                    <div>
+                        <h3>Dark Neon Theme</h3>
+                        <p>Immersive fullscreen UI with vibrant neon accents against a deep space backdrop.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-dot" style="background: var(--blue);"></div>
+                    <div>
+                        <h3>Auto-Save</h3>
+                        <p>Game state is saved when you leave and restored when you return. Never lose progress.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-dot" style="background: var(--orange);"></div>
+                    <div>
+                        <h3>High Score Tracking</h3>
+                        <p>Per-difficulty leaderboards that persist across sessions. Beat your best.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Difficulty -->
+        <section class="difficulty">
+            <h2 class="section-title">Choose Your Challenge</h2>
+            <p class="section-subtitle">Three difficulty levels to match your skill.</p>
+            <div class="diff-cards">
+                <div class="diff-card easy">
+                    <span class="diff-label">Easy</span>
+                    <div class="stat">
+                        <div class="stat-value">20</div>
+                        <div class="stat-label">Starting Moves</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Tiles at Start</div>
+                    </div>
+                </div>
+                <div class="diff-card medium">
+                    <span class="diff-label">Medium</span>
+                    <div class="stat">
+                        <div class="stat-value">16</div>
+                        <div class="stat-label">Starting Moves</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Tiles at Start</div>
+                    </div>
+                </div>
+                <div class="diff-card hard">
+                    <span class="diff-label">Hard</span>
+                    <div class="stat">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Starting Moves</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Tiles at Start</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta">
+            <h2>Ready to Play?</h2>
+            <p>Download Same Colors free on iOS and Android.</p>
+            <div class="store-buttons">
+                <a href="https://apps.apple.com/us/app/same-colors/id6761005376" class="store-btn ios">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    App Store
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.albenrisdev.samecolors" class="store-btn android">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.67a1.58 1.58 0 0 1-.6-1.3V1.63c0-.54.22-1 .6-1.3l11.06 11.67L3.18 23.67zm14.53-8.2L5.07 22.3l9.64-10.17 3 3.17v.17zm1.27-.67L16.25 12l2.73-2.8 3.13 1.77a1.16 1.16 0 0 1 0 2.06l-3.13 1.77zM5.07 1.7l12.64 6.83-3 3.17L5.07 1.7z"/></svg>
+                    Google Play
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p><a href="https://github.com/albenisayev/SameColors">Privacy Policy</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Generate animated stars
+        const starsEl = document.getElementById('stars');
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('span');
+            const size = Math.random() * 2.5 + 0.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            star.style.animationDelay = (Math.random() * 3) + 's';
+            starsEl.appendChild(star);
+        }
+    </script>
 </body>
 </html>
