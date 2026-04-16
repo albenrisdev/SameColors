@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Same Colors</title>
+    <link rel="icon" type="image/png" href="images/icon.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0e27;
+            color: #e8eaf6;
+            line-height: 1.7;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #3dffc8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2.5rem;
+        }
+
+        .back:hover { text-decoration: underline; }
+
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .effective {
+            color: #9fa8da;
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3dffc8;
+            margin: 2.5rem 0 0.8rem;
+        }
+
+        p { color: #c5cae9; margin-bottom: 1rem; }
+
+        strong { color: #e8eaf6; }
+
+        ul {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        ul li {
+            color: #c5cae9;
+            padding: 0.25rem 0 0.25rem 1.2rem;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '–';
+            position: absolute;
+            left: 0;
+            color: #9fa8da;
+        }
+
+        code {
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            padding: 0.1em 0.4em;
+            font-size: 0.88em;
+            color: #b388ff;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.6rem 0.8rem;
+            background: rgba(255,255,255,0.06);
+            color: #e8eaf6;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.6rem 0.8rem;
+            color: #c5cae9;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        a { color: #3dffc8; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to Same Colors</a>
+
+        <h1>Privacy Policy — Same Colors</h1>
+        <p class="effective">Effective Date: March 23, 2026</p>
+
+        <h2>Overview</h2>
+        <p>Same Colors is a color-matching puzzle game for Android and iOS. This policy explains what data the app collects and how it is used.</p>
+
+        <hr>
+
+        <h2>Advertising</h2>
+        <p>Same Colors displays interstitial ads provided by <strong>Google AdMob</strong>. To support ad delivery, the app may collect and share certain data with Google as described below.</p>
+        <p>On <strong>iOS</strong>, the app requests your permission through Apple's <strong>App Tracking Transparency (ATT)</strong> prompt before any tracking occurs. You can decline tracking, and the app will still function normally with non-personalized ads.</p>
+        <p>On <strong>Android</strong>, ad personalization follows your device's ad settings. You can opt out of personalized ads in <strong>Settings &gt; Google &gt; Ads</strong>.</p>
+
+        <hr>
+
+        <h2>Data Collected</h2>
+        <table>
+            <thead>
+                <tr><th>Data</th><th>Linked to You</th><th>Used for Tracking</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Device Identifier (IDFA on iOS, Ad ID on Android)</td><td>No</td><td>Yes (with consent)</td><td>Third-party advertising</td></tr>
+                <tr><td>Product Interaction</td><td>No</td><td>No</td><td>Advertising and analytics</td></tr>
+                <tr><td>Crash Data</td><td>No</td><td>No</td><td>App stability</td></tr>
+                <tr><td>Performance Data</td><td>No</td><td>No</td><td>App performance</td></tr>
+            </tbody>
+        </table>
+        <p>On iOS, if you decline the ATT prompt, the Device Identifier is not collected or shared. On Android, you can reset or opt out of your advertising ID in device settings.</p>
+
+        <hr>
+
+        <h2>Data Stored Locally on Your Device</h2>
+        <p>The app saves a small amount of game data to your device using <code>UserDefaults</code> (iOS) or <code>SharedPreferences</code> (Android). This data never leaves your device and includes:</p>
+        <table>
+            <thead>
+                <tr><th>Data</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Selected difficulty (Easy / Medium / Hard)</td><td>Remember your last chosen difficulty</td></tr>
+                <tr><td>High score per difficulty level</td><td>Display your personal best scores</td></tr>
+                <tr><td>Sound on/off preference</td><td>Remember your audio preference</td></tr>
+                <tr><td>Current game state (board layout, score)</td><td>Resume your game when you reopen the app</td></tr>
+            </tbody>
+        </table>
+        <p>This data is stored locally and is automatically deleted when you uninstall the app.</p>
+
+        <hr>
+
+        <h2>Third-Party Services</h2>
+        <p>Same Colors integrates the <strong>Google Mobile Ads SDK (AdMob)</strong> for displaying advertisements. Google's data practices are governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+        <p>Ad-related network requests are sent to the following domains:</p>
+        <ul>
+            <li><code>googleads.g.doubleclick.net</code></li>
+            <li><code>googlesyndication.com</code></li>
+        </ul>
+        <p>No other third-party SDKs, analytics platforms, or social media services are integrated.</p>
+
+        <hr>
+
+        <h2>Data We Do NOT Collect</h2>
+        <ul>
+            <li>No names, email addresses, or contact information</li>
+            <li>No location data</li>
+            <li>No photos, camera, or microphone access</li>
+            <li>No contacts or calendar data</li>
+            <li>No health or fitness data</li>
+        </ul>
+
+        <hr>
+
+        <h2>Children's Privacy</h2>
+        <p>Same Colors does not knowingly collect personal information from children under 13. The app displays ads, which may be non-personalized if tracking consent is not granted.</p>
+
+        <hr>
+
+        <h2>Your Choices</h2>
+        <ul>
+            <li><strong>iOS — Decline tracking:</strong> When the ATT prompt appears, tap "Ask App Not to Track" to prevent personalized ad tracking.</li>
+            <li><strong>iOS — Change tracking later:</strong> Go to <strong>Settings &gt; Privacy &amp; Security &gt; Tracking</strong> on your device to modify your preference at any time.</li>
+            <li><strong>Android — Opt out of personalized ads:</strong> Go to <strong>Settings &gt; Google &gt; Ads</strong> to manage your ad preferences or reset your advertising ID.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Changes to This Policy</h2>
+        <p>If this policy changes in a future version of the app, the updated policy will be made available at this URL. The effective date at the top of this document will be updated accordingly.</p>
+
+        <hr>
+
+        <h2>Contact</h2>
+        <p>If you have any questions about this privacy policy, please open an issue on the <a href="https://github.com/albenisayev/SameColors" target="_blank" rel="noopener">project repository</a> or contact the developer through the App Store listing.</p>
+    </div>
+</body>
+</html>
